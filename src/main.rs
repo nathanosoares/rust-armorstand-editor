@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_mod_picking::*;
 
 mod camera;
 use camera::{pan_orbit_camera, PanOrbitCamera};
@@ -17,18 +16,13 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(ControlsPlugin)
         .add_plugin(ArmorStandDummyPlugin)
-        .add_plugins(DefaultPickingPlugins)
         .add_startup_system(setup)
         .add_system(pan_orbit_camera)
         .add_system(physics_timer_tick)
         .run();
 }
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
+fn setup(mut commands: Commands) {
     // light
     commands.spawn_bundle(PointLightBundle {
         point_light: PointLight {
@@ -48,7 +42,6 @@ fn setup(
             transform: Transform::from_translation(translation).looking_at(Vec3::ZERO, Vec3::Y),
             ..Default::default()
         })
-        .insert_bundle(PickingCameraBundle::default())
         .insert(PanOrbitCamera {
             radius,
             ..Default::default()

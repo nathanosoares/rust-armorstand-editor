@@ -1,9 +1,8 @@
 use std::f32::consts::PI;
 
-use bevy::{ecs::bundle, prelude::*};
-use bevy_mod_picking::{PickableBundle, Hover};
+use bevy::prelude::*;
 
-use crate::{controls::Controllable, PhysicsTimer};
+use crate::controls::Controllable;
 
 pub struct ArmorStandDummyPlugin;
 
@@ -188,17 +187,16 @@ fn setup_armor_stand(
             ..Default::default()
         })
         .with_children(|parent| {
-            parent
-                .spawn_bundle(create_armor_stand_part(
-                    &mut meshes,
-                    &mut materials,
-                    2.0,
-                    11.0,
-                    2.0,
-                    0.0,
-                    -5.5,
-                    0.0,
-                ));
+            parent.spawn_bundle(create_armor_stand_part(
+                &mut meshes,
+                &mut materials,
+                2.0,
+                11.0,
+                2.0,
+                0.0,
+                -5.5,
+                0.0,
+            ));
         });
 }
 
@@ -248,16 +246,16 @@ pub struct Euler {
 }
 
 pub fn rotator_system(
-    time: Res<Time>,
-    timer: Res<PhysicsTimer>,
+    // time: Res<Time>,
+    // timer: Res<PhysicsTimer>,
     mut query: Query<(&mut Transform, &Rotator)>,
 ) {
-    if timer.0.just_finished() {
-        for (mut transform, rotator) in query.iter_mut() {
-            transform.rotation = Quat::from_rotation_x(rotator.euler.x * PI / 180.0)
-                * Quat::from_rotation_y(rotator.euler.y * PI / 180.0)
-                * Quat::from_rotation_z(rotator.euler.z * PI / 180.0);
-            // transform.rotate(Quat::from_rotation_x(0.05));
-        }
+    // if timer.0.just_finished() {
+    for (mut transform, rotator) in query.iter_mut() {
+        transform.rotation = Quat::from_rotation_x(rotator.euler.x * PI / 180.0)
+            * Quat::from_rotation_y(rotator.euler.y * PI / 180.0)
+            * Quat::from_rotation_z(rotator.euler.z * PI / 180.0);
+        // transform.rotate(Quat::from_rotation_x(0.05));
     }
+    // }
 }

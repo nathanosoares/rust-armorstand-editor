@@ -49,11 +49,9 @@ pub fn pan_orbit_camera(
             pan += ev.delta;
         }
     }
-    
     for ev in ev_scroll.iter() {
         scroll += ev.y;
     }
-    
     if input_mouse.just_released(orbit_button) || input_mouse.just_pressed(orbit_button) {
         orbit_button_changed = true;
     }
@@ -112,7 +110,7 @@ pub fn pan_orbit_camera(
     }
 }
 
-fn get_primary_window_size(windows: &Res<Windows>) -> Vec2 {
+pub fn get_primary_window_size(windows: &Res<Windows>) -> Vec2 {
     let window = windows.get_primary().unwrap();
     let window = Vec2::new(window.width() as f32, window.height() as f32);
     window
