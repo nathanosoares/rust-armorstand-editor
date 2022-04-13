@@ -49,9 +49,11 @@ pub fn pan_orbit_camera(
             pan += ev.delta;
         }
     }
+    
     for ev in ev_scroll.iter() {
         scroll += ev.y;
     }
+    
     if input_mouse.just_released(orbit_button) || input_mouse.just_pressed(orbit_button) {
         orbit_button_changed = true;
     }

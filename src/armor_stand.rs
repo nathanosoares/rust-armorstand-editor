@@ -1,6 +1,7 @@
 use std::f32::consts::PI;
 
-use bevy::prelude::*;
+use bevy::{ecs::bundle, prelude::*};
+use bevy_mod_picking::{PickableBundle, Hover};
 
 use crate::{controls::Controllable, PhysicsTimer};
 
@@ -13,94 +14,54 @@ impl Plugin for ArmorStandDummyPlugin {
     }
 }
 
+#[derive(Bundle, Default)]
+struct PartBundle {
+    transform: Transform,
+    visibility: Visibility,
+    global_tranform: GlobalTransform,
+    computed_visiblit: ComputedVisibility,
+    rotator: Rotator,
+    controllable: Controllable,
+    // #[bundle]
+    // pickable: PickableBundle,
+}
+
 fn setup_armor_stand(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    // Left Leg
-    commands.spawn_bundle(create_armor_stand_part(
-        &mut meshes,
-        &mut materials,
-        2.0,
-        11.0,
-        2.0,
-        2.0,
-        5.5,
-        0.0,
-    ));
-
-    // Right Leg
-    commands.spawn_bundle(create_armor_stand_part(
-        &mut meshes,
-        &mut materials,
-        2.0,
-        11.0,
-        2.0,
-        -2.0,
-        5.5,
-        0.0,
-    ));
-
-    // Left Arm
+    // Head
     commands
-        .spawn()
-        .insert(Transform::from_xyz(
-            convert_to_units(6.0),
-            convert_to_units(21.0),
-            0.0,
-        ))
-        .insert(Visibility::default())
-        .insert(GlobalTransform::default())
-        .insert(ComputedVisibility::default())
-        .insert(Rotator::default())
-        .insert(Controllable)
+        .spawn_bundle(PartBundle {
+            transform: Transform::from_xyz(0.0, convert_to_units(22.0), 0.0),
+            controllable: Controllable {
+                label: "Head".to_owned(),
+            },
+            ..Default::default()
+        })
         .with_children(|parent| {
             parent.spawn_bundle(create_armor_stand_part(
                 &mut meshes,
                 &mut materials,
                 2.0,
-                12.0,
+                7.0,
                 2.0,
                 0.0,
-                4.0,
-                0.0,
-            ));
-        });
-
-    // Right Arm
-    commands
-        .spawn()
-        .insert(Transform::from_xyz(
-            convert_to_units(-6.0),
-            convert_to_units(21.0),
-            0.0,
-        ))
-        .insert(Visibility::default())
-        .insert(GlobalTransform::default())
-        .insert(ComputedVisibility::default())
-        // .insert(Rotator)
-        .with_children(|parent| {
-            parent.spawn_bundle(create_armor_stand_part(
-                &mut meshes,
-                &mut materials,
-                2.0,
-                12.0,
-                2.0,
-                0.0,
-                -4.0,
+                3.5,
                 0.0,
             ));
         });
 
     // Body
     commands
-        .spawn()
-        .insert(Transform::from_xyz(0.0, convert_to_units(23.0), 0.0))
-        .insert(Visibility::default())
-        .insert(GlobalTransform::default())
-        .insert(ComputedVisibility::default())
-        // .insert(Rotator)
+        .spawn_bundle(PartBundle {
+            transform: Transform::from_xyz(0.0, convert_to_units(23.0), 0.0),
+            controllable: Controllable {
+                label: "Body".to_owned(),
+            },
+            ..Default::default()
+        })
         .with_children(|parent| {
             // Horizontal Bottom
             parent.spawn_bundle(create_armor_stand_part(
@@ -151,25 +112,93 @@ fn setup_armor_stand(
             ));
         });
 
-    // Head
+    // Left Arm
     commands
-        .spawn()
-        .insert(Transform::from_xyz(0.0, convert_to_units(22.0), 0.0))
-        .insert(Visibility::default())
-        .insert(GlobalTransform::default())
-        .insert(ComputedVisibility::default())
-        // .insert(Rotator)
+        .spawn_bundle(PartBundle {
+            transform: Transform::from_xyz(convert_to_units(6.0), convert_to_units(21.0), 0.0),
+            controllable: Controllable {
+                label: "Left Arm".to_owned(),
+            },
+            ..Default::default()
+        })
         .with_children(|parent| {
             parent.spawn_bundle(create_armor_stand_part(
                 &mut meshes,
                 &mut materials,
                 2.0,
-                7.0,
+                12.0,
                 2.0,
                 0.0,
-                3.5,
+                -4.0,
                 0.0,
             ));
+        });
+
+    // Right Arm
+    commands
+        .spawn_bundle(PartBundle {
+            transform: Transform::from_xyz(convert_to_units(-6.0), convert_to_units(21.0), 0.0),
+            controllable: Controllable {
+                label: "Right Arm".to_owned(),
+            },
+            ..Default::default()
+        })
+        .with_children(|parent| {
+            parent.spawn_bundle(create_armor_stand_part(
+                &mut meshes,
+                &mut materials,
+                2.0,
+                12.0,
+                2.0,
+                0.0,
+                -4.0,
+                0.0,
+            ));
+        });
+
+    // Left Leg
+    commands
+        .spawn_bundle(PartBundle {
+            transform: Transform::from_xyz(convert_to_units(2.0), convert_to_units(11.0), 0.0),
+            controllable: Controllable {
+                label: "Left Leg".to_owned(),
+            },
+            ..Default::default()
+        })
+        .with_children(|parent| {
+            parent.spawn_bundle(create_armor_stand_part(
+                &mut meshes,
+                &mut materials,
+                2.0,
+                11.0,
+                2.0,
+                0.0,
+                -5.5,
+                0.0,
+            ));
+        });
+
+    // Right Leg
+    commands
+        .spawn_bundle(PartBundle {
+            transform: Transform::from_xyz(convert_to_units(-2.0), convert_to_units(11.0), 0.0),
+            controllable: Controllable {
+                label: "Right Leg".to_owned(),
+            },
+            ..Default::default()
+        })
+        .with_children(|parent| {
+            parent
+                .spawn_bundle(create_armor_stand_part(
+                    &mut meshes,
+                    &mut materials,
+                    2.0,
+                    11.0,
+                    2.0,
+                    0.0,
+                    -5.5,
+                    0.0,
+                ));
         });
 }
 
@@ -208,14 +237,14 @@ fn convert_to_units(size: f32) -> f32 {
 
 #[derive(Component, Default, Debug)]
 pub struct Rotator {
-    euler: Euler,
+    pub euler: Euler,
 }
 
 #[derive(Default, Debug)]
-struct Euler {
-    x: f32,
-    y: f32,
-    z: f32,
+pub struct Euler {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
 }
 
 pub fn rotator_system(
@@ -225,7 +254,9 @@ pub fn rotator_system(
 ) {
     if timer.0.just_finished() {
         for (mut transform, rotator) in query.iter_mut() {
-            transform.rotation = Quat::from_rotation_x(rotator.euler.x * PI / 180.0);
+            transform.rotation = Quat::from_rotation_x(rotator.euler.x * PI / 180.0)
+                * Quat::from_rotation_y(rotator.euler.y * PI / 180.0)
+                * Quat::from_rotation_z(rotator.euler.z * PI / 180.0);
             // transform.rotate(Quat::from_rotation_x(0.05));
         }
     }

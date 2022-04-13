@@ -1,10 +1,11 @@
 use bevy::prelude::*;
+use bevy_mod_picking::*;
 
 mod camera;
 use camera::{pan_orbit_camera, PanOrbitCamera};
 
 mod armor_stand;
-use armor_stand::{ArmorStandDummyPlugin};
+use armor_stand::ArmorStandDummyPlugin;
 
 mod controls;
 use controls::ControlsPlugin;
@@ -16,6 +17,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(ControlsPlugin)
         .add_plugin(ArmorStandDummyPlugin)
+        .add_plugins(DefaultPickingPlugins)
         .add_startup_system(setup)
         .add_system(pan_orbit_camera)
         .add_system(physics_timer_tick)
@@ -46,6 +48,7 @@ fn setup(
             transform: Transform::from_translation(translation).looking_at(Vec3::ZERO, Vec3::Y),
             ..Default::default()
         })
+        .insert_bundle(PickingCameraBundle::default())
         .insert(PanOrbitCamera {
             radius,
             ..Default::default()
