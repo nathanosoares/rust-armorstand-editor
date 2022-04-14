@@ -1,8 +1,9 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
+use bevy_mod_raycast::RayCastMesh;
 
-use crate::controls::Controllable;
+use crate::{controls::Controllable, raycast::RaycastSet};
 
 pub struct ArmorStandDummyPlugin;
 
@@ -25,6 +26,9 @@ struct PartBundle {
     // pickable: PickableBundle,
 }
 
+#[derive(Component, Default)]
+pub struct Pivot(pub f32, pub f32, pub f32);
+
 fn setup_armor_stand(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -32,25 +36,21 @@ fn setup_armor_stand(
 ) {
     // Head
     commands
-        .spawn_bundle(PartBundle {
-            transform: Transform::from_xyz(0.0, convert_to_units(22.0), 0.0),
-            controllable: Controllable {
-                label: "Head".to_owned(),
-            },
-            ..Default::default()
+        .spawn_bundle(create_armor_stand_part(
+            &mut meshes,
+            &mut materials,
+            2.0,
+            7.0,
+            2.0,
+            0.0,
+            25.5,
+            0.0,
+        ))
+        .insert(Controllable {
+            label: "Head".to_owned(),
         })
-        .with_children(|parent| {
-            parent.spawn_bundle(create_armor_stand_part(
-                &mut meshes,
-                &mut materials,
-                2.0,
-                7.0,
-                2.0,
-                0.0,
-                3.5,
-                0.0,
-            ));
-        });
+        .insert(Pivot(0.0, convert_to_units(22.0), 0.0))
+        .insert(RayCastMesh::<RaycastSet>::default());
 
     // Body
     commands

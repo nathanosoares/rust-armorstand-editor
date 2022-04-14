@@ -8,3 +8,4 @@ version = "0.1.0"
 [dependencies]
 bevy = "0.6.1"
 bevy_egui = "0.12.1"
+bevy_mod_raycast = "0.3.9"

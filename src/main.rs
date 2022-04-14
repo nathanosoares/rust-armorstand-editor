@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 mod camera;
+use bevy_mod_raycast::RayCastSource;
 use camera::{pan_orbit_camera, PanOrbitCamera};
 
 mod armor_stand;
@@ -9,6 +10,9 @@ use armor_stand::ArmorStandDummyPlugin;
 mod controls;
 use controls::ControlsPlugin;
 
+mod raycast;
+use raycast::{RaycastPlugin, RaycastSet};
+
 fn main() {
     App::new()
         .insert_resource(PhysicsTimer(Timer::from_seconds(1.0 / 60.0, true)))
@@ -16,6 +20,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(ControlsPlugin)
         .add_plugin(ArmorStandDummyPlugin)
+        .add_plugin(RaycastPlugin)
         .add_startup_system(setup)
         .add_system(pan_orbit_camera)
         .add_system(physics_timer_tick)
@@ -45,7 +50,8 @@ fn setup(mut commands: Commands) {
         .insert(PanOrbitCamera {
             radius,
             ..Default::default()
-        });
+        })
+        .insert(RayCastSource::<RaycastSet>::new_transform_empty());
 }
 pub struct PhysicsTimer(Timer);
 
