@@ -2,7 +2,6 @@ use bevy::prelude::*;
 use bevy_egui::{egui, EguiContext, EguiPlugin};
 
 use crate::armor_stand::Rotator;
-
 pub struct ControlsPlugin;
 
 impl Plugin for ControlsPlugin {
@@ -33,17 +32,17 @@ fn controllable_system(
                             ui.label(controllable.label.clone());
 
                             ui.add(
-                                egui::Slider::new(&mut rotator.euler.x, 0.0..=360.0)
+                                egui::Slider::new(&mut rotator.euler.x, -180.0..=180.0)
                                     .show_value(false),
                             );
 
                             ui.add(
-                                egui::Slider::new(&mut rotator.euler.y, 0.0..=360.0)
+                                egui::Slider::new(&mut rotator.euler.y, -180.0..=180.0)
                                     .show_value(false),
                             );
 
                             ui.add(
-                                egui::Slider::new(&mut rotator.euler.z, 0.0..=360.0)
+                                egui::Slider::new(&mut rotator.euler.z, -180.0..=180.0)
                                     .show_value(false),
                             );
 
