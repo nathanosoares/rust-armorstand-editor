@@ -1,4 +1,4 @@
-use bevy::{ecs::system::EntityCommands, prelude::*, render::texture::TranscodeFormat};
+use bevy::prelude::*;
 
 use crate::controls::Controllable;
 
@@ -19,7 +19,7 @@ pub struct ArmorStandRequester {
 }
 
 impl ArmorStandRequester {
-    pub fn request_armor_stand(&mut self) {
+    pub fn request(&mut self) {
         self.request = true;
     }
 
@@ -176,7 +176,7 @@ fn create_armor_stand_part(
                         convert_to_units(part.size.y),
                         convert_to_units(part.size.z),
                     ))),
-                    material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
+                    material: materials.add(Color::rgba(0.8, 0.7, 0.6, 0.5).into()),
                     transform: Transform::from_xyz(
                         convert_to_units(part.position.x),
                         convert_to_units(part.position.y),
@@ -198,9 +198,9 @@ pub struct Rotator {
 }
 
 fn armor_stand_requester_system(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
+    commands: Commands,
+    meshes: ResMut<Assets<Mesh>>,
+    materials: ResMut<Assets<StandardMaterial>>,
     mut requester: ResMut<ArmorStandRequester>,
 ) {
     if requester.request {
